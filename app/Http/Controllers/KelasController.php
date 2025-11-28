@@ -9,7 +9,7 @@ class KelasController extends Controller
 {
     public function index()
     {
-        $kelas = Kelas::with(['siswas'])->paginate(10);
+        $kelas = Kelas::with('siswas')->latest()->paginate(10);
         return view('kelas.index', compact('kelas'));
     }
 
@@ -54,7 +54,17 @@ class KelasController extends Controller
 
     public function destroy(Kelas $kelas)
     {
-        $kelas->delete();
+        $kelasId = $kelas->id;
+        
+        // Delete related absensi records first
+        \DB::table('absensi')->where('kelas_id', $kelasId)->delete();
+        
+        // Delete related siswa records
+        \DB::table('siswas')->where('kelas_id', $kelasId)->delete();
+        
+        // Delete the kelas itself
+        \DB::table('kelas')->where('id', $kelasId)->delete();
+        
         return redirect()->route('kelas.index')->with('success', 'Kelas berhasil dihapus');
     }
 

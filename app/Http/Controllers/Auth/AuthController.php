@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Guru;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -53,29 +52,23 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'nip' => 'required|string|unique:gurus',
-            'no_telp' => 'nullable|string',
-            'alamat' => 'nullable|string',
+            'nip' => 'required|string|max:50|unique:users,nip',
+            'no_telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:500',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'guru',
-        ]);
-
-        Guru::create([
-            'user_id' => $user->id,
             'nip' => $validated['nip'],
-            'nama_lengkap' => $validated['name'],
-            'email' => $validated['email'],
             'no_telp' => $validated['no_telp'] ?? null,
             'alamat' => $validated['alamat'] ?? null,
+            'role' => 'guru',
         ]);
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect('/dashboard')->with('success', 'Akun berhasil dibuat! Selamat datang di Aplikasi Absensi Kelas.');
     }
 }
