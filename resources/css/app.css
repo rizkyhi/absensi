@@ -32,37 +32,57 @@ body {
     background-color: #f8f9fa;
     color: #333;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: clamp(14px, 2vw, 16px);
+    line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     color: #333;
     margin: 0;
+    line-height: 1.2;
+}
+
+h1 { font-size: clamp(24px, 6vw, 32px); }
+h2 { font-size: clamp(20px, 5vw, 28px); }
+h3 { font-size: clamp(18px, 4vw, 24px); }
+h4 { font-size: clamp(16px, 3.5vw, 20px); }
+h5 { font-size: clamp(14px, 3vw, 18px); }
+h6 { font-size: clamp(13px, 2.5vw, 16px); }
+
+p {
+    font-size: clamp(13px, 2.2vw, 16px);
+    margin: 0 0 1rem 0;
 }
 
 a {
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 button {
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: inherit;
 }
 
 input, textarea, select {
     font-family: inherit;
+    font-size: inherit;
 }
 
 /* Form Controls */
 .form-control,
 .form-select {
     width: 100%;
-    padding: 10px 14px;
+    padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 14px);
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: clamp(14px, 2vw, 16px);
     transition: all 0.3s ease;
     background-color: #f8f9fa;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .form-control:focus,
@@ -73,6 +93,19 @@ input, textarea, select {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+.form-control::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+.form-select {
+    padding-right: clamp(30px, 5vw, 40px);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right clamp(8px, 2vw, 12px) center;
+    background-size: clamp(16px, 3vw, 20px);
+}
+
 /* Cards */
 .card {
     border-radius: 12px;
@@ -81,26 +114,48 @@ input, textarea, select {
     border: none;
     overflow: hidden;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .card:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.card-body {
+    padding: clamp(15px, 3vw, 20px);
+    flex: 1;
 }
 
 /* Buttons */
 .btn {
-    padding: 10px 16px;
+    padding: clamp(10px, 2vw, 12px) clamp(16px, 3vw, 20px);
     font-weight: 600;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: clamp(13px, 2vw, 14px);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: clamp(6px, 1vw, 8px);
     white-space: nowrap;
     min-height: 44px;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn i {
+    font-size: clamp(13px, 2vw, 16px);
 }
 
 .btn-primary {
@@ -108,9 +163,13 @@ input, textarea, select {
     color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 .btn-secondary {
@@ -118,7 +177,7 @@ input, textarea, select {
     color: #666;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
     background: #dee2e6;
 }
 
@@ -127,7 +186,7 @@ input, textarea, select {
     color: white;
 }
 
-.btn-danger:hover {
+.btn-danger:hover:not(:disabled) {
     background: #c82333;
 }
 
@@ -136,17 +195,38 @@ input, textarea, select {
     color: white;
 }
 
-.btn-info:hover {
+.btn-info:hover:not(:disabled) {
     background: #138496;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #333;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background: #e0a800;
+}
+
+.btn-lg {
+    min-height: 48px;
+    font-size: clamp(14px, 2.2vw, 16px);
+}
+
+.btn-sm {
+    min-height: 36px;
+    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
+    font-size: clamp(12px, 1.8vw, 13px);
 }
 
 /* Badges */
 .badge {
-    padding: 4px 8px;
-    font-size: 12px;
+    padding: clamp(4px, 1vw, 6px) clamp(8px, 1.5vw, 10px);
+    font-size: clamp(11px, 1.8vw, 12px);
     font-weight: 600;
     border-radius: 6px;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .badge-success {
@@ -169,14 +249,22 @@ input, textarea, select {
     color: white;
 }
 
+.badge-primary {
+    background-color: #667eea;
+    color: white;
+}
+
 /* Alerts */
 .alert {
     border-radius: 8px;
     border: none;
-    margin-bottom: 20px;
-    padding: 12px 15px;
-    font-size: 14px;
+    margin-bottom: clamp(15px, 3vw, 20px);
+    padding: clamp(12px, 2vw, 15px) clamp(15px, 3vw, 20px);
+    font-size: clamp(13px, 2vw, 14px);
     animation: slideDown 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
 }
 
 @keyframes slideDown {
@@ -221,10 +309,37 @@ input, textarea, select {
 
 .alert li {
     margin-bottom: 4px;
-    font-size: 13px;
+    font-size: clamp(12px, 1.8vw, 13px);
+}
+
+.alert-dismissible {
+    padding-right: clamp(35px, 6vw, 45px);
+}
+
+.btn-close {
+    position: absolute;
+    right: clamp(10px, 2vw, 15px);
+    top: clamp(10px, 2vw, 15px);
+    background: none;
+    border: none;
+    font-size: clamp(18px, 3vw, 20px);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
 }
 
 /* Tables */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -237,18 +352,23 @@ input, textarea, select {
 }
 
 .table thead th {
-    padding: 12px 15px;
+    padding: clamp(10px, 2vw, 15px);
     font-weight: 600;
-    font-size: 13px;
+    font-size: clamp(12px, 2vw, 13px);
     text-align: left;
     border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .table tbody td {
-    padding: 12px 15px;
+    padding: clamp(10px, 2vw, 15px);
     border-bottom: 1px solid #e0e0e0;
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     vertical-align: middle;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .table tbody tr {
@@ -263,16 +383,129 @@ input, textarea, select {
     border-bottom: none;
 }
 
-/* Responsive Utilities */
+/* Responsive Table Cards */
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tbody tr {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: clamp(12px, 2vw, 15px);
+        padding: clamp(12px, 2vw, 15px);
+        overflow: hidden;
+    }
+
+    .table tbody td {
+        padding: clamp(8px, 1.5vw, 10px) 0;
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .table tbody td:last-child {
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: clamp(8px, 2vw, 12px);
+        font-weight: 600;
+        width: 45%;
+        color: #667eea;
+        font-size: clamp(11px, 1.8vw, 12px);
+    }
+
+    .table tbody td:first-child {
+        font-weight: 700;
+        background: #f8f9fa;
+        padding-left: clamp(8px, 2vw, 12px);
+    }
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: clamp(15px, 3vw, 20px);
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: clamp(6px, 1.5vw, 8px);
+    font-size: clamp(13px, 2vw, 14px);
+}
+
+.form-label i {
+    margin-right: 6px;
+}
+
+.form-text {
+    display: block;
+    font-size: clamp(12px, 1.8vw, 13px);
+    color: #666;
+    margin-top: 4px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: clamp(12px, 2vw, 15px);
+}
+
 .is-invalid {
     border-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
 }
 
 .invalid-feedback {
     display: block;
     color: #dc3545;
-    font-size: 13px;
-    margin-top: 6px;
+    font-size: clamp(12px, 1.8vw, 13px);
+    margin-top: clamp(4px, 1vw, 6px);
+    animation: slideDown 0.3s ease;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    gap: clamp(4px, 1vw, 6px);
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: clamp(10px, 2vw, 15px);
+}
+
+.pagination a,
+.pagination span {
+    padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 12px);
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: clamp(12px, 1.8vw, 13px);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.pagination a:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.pagination .active span {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
 }
 
 /* Scrollbar Styling */
@@ -283,6 +516,7 @@ input, textarea, select {
 
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -298,14 +532,15 @@ input, textarea, select {
 @media print {
     body {
         background: white;
+        font-size: 12pt;
     }
     
-    button, .btn {
-        display: none;
+    button, .btn, .no-print, .sidebar-toggle {
+        display: none !important;
     }
     
-    .no-print {
-        display: none;
+    .card {
+        page-break-inside: avoid;
     }
 }
 
@@ -315,5 +550,32 @@ input, textarea, select {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 600px) and (max-width: 1024px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .card-body {
+        padding: 12px;
+    }
+    
+    .btn {
+        min-height: 40px;
+        padding: 8px 12px;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+    body {
+        font-size: 16px;
+    }
+    
+    .container-lg {
+        max-width: 1320px;
     }
 }

@@ -1,0 +1,256 @@
+# Visual ERD - Sistem Absensi Kelas
+
+## Diagram Teks ASCII
+
+```
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                   SISTEM INFORMASI ABSENSI KELAS - ERD                         ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+
+┏━━━━━━━━━━━━━━━━┓
+┃    USERS       ┃
+┣━━━━━━━━━━━━━━━━┫
+┃ PK  id         ┃
+┃ ... name       ┃
+┃ ... email (U)  ┃
+┃ ... password   ┃
+┃ ... role       ┃
+┃ ... created_at ┃
+┃ ... updated_at ┃
+┗━━━━━━━━━━━━━━━━┛
+         │
+         │ manages (1:N)
+         ↓
+┏━━━━━━━━━━━━━━━━┓          ┏━━━━━━━━━━━━━━━━━━━━┓
+┃    KELAS       ┃ contains ┃     SISWA          ┃
+┣━━━━━━━━━━━━━━━━┫ ------→  ┣━━━━━━━━━━━━━━━━━━━━┫
+┃ PK  id         ┃  (1:N)   ┃ PK  id             ┃
+┃ ... nama_kelas ┃          ┃ FK  kelas_id       ┃
+┃     (U)        ┃          ┃ ... nis (U)        ┃
+┃ ... tingkat    ┃          ┃ ... nama_lengkap   ┃
+┃ ... jurusan    ┃          ┃ ... jenis_kelamin  ┃
+┃ ... kapasitas  ┃          ┃ ... tanggal_lahir  ┃
+┃ ... created_at ┃          ┃ ... alamat         ┃
+┃ ... updated_at ┃          ┃ ... no_telp        ┃
+┗━━━━━━━━━━━━━━━━┛          ┃ ... nama_orang_tua ┃
+         │                  ┃ ... created_at     ┃
+         │ tracks (1:N)     ┃ ... updated_at     ┃
+         │                  ┗━━━━━━━━━━━━━━━━━━━━┛
+         │                           │
+         │                           │ records (1:N)
+         │                           ↓
+         │                  ┏━━━━━━━━━━━━━━━━━━━━┓
+         └─────────────────→┃     ABSENSI        ┃
+            (1:N)           ┣━━━━━━━━━━━━━━━━━━━━┫
+                            ┃ PK  id             ┃
+                            ┃ FK  siswa_id       ┃
+                            ┃ FK  kelas_id       ┃
+                            ┃ ... tanggal_absen  ┃
+                            ┃ ... status         ┃
+                            ┃ ... keterangan     ┃
+                            ┃ ... created_at     ┃
+                            ┃ ... updated_at     ┃
+                            ┃ (U) siswa_id +     ┃
+                            ┃     tanggal_absen  ┃
+                            ┗━━━━━━━━━━━━━━━━━━━━┛
+
+
+Keterangan:
+- PK    = Primary Key
+- FK    = Foreign Key
+- (U)   = Unique Constraint
+- (1:N) = One to Many Relationship
+- →     = Relationship Direction
+```
+
+---
+
+## Tabel Relasi Ringkas
+
+### USERS (Pengguna)
+```
+┌─────────────────────────────────────┐
+│         USERS                       │
+├──────────────┬───────┬──────────────┤
+│ Kolom        │ Tipe  │ Keterangan   │
+├──────────────┼───────┼──────────────┤
+│ id (PK)      │ INT   │ -            │
+│ name         │ STR   │ Nama user    │
+│ email (U)    │ STR   │ Email unik   │
+│ password     │ STR   │ Terenkripsi  │
+│ role         │ ENUM  │ admin/guru   │
+│ created_at   │ TS    │ -            │
+│ updated_at   │ TS    │ -            │
+└──────────────┴───────┴──────────────┘
+```
+
+### KELAS (Kelas/Rombongan Belajar)
+```
+┌────────────────────────────────────────────┐
+│         KELAS                              │
+├──────────────┬───────┬─────────────────────┤
+│ Kolom        │ Tipe  │ Keterangan          │
+├──────────────┼───────┼─────────────────────┤
+│ id (PK)      │ INT   │ -                   │
+│ nama_kelas   │ STR   │ Unik, misal X-RPL-1 │
+│ tingkat      │ STR   │ X, XI, XII          │
+│ jurusan      │ STR   │ RPL, TKJ, dll       │
+│ kapasitas    │ INT   │ Default: 30         │
+│ created_at   │ TS    │ -                   │
+│ updated_at   │ TS    │ -                   │
+└──────────────┴───────┴─────────────────────┘
+```
+
+### SISWA (Data Siswa)
+```
+┌────────────────────────────────────────────┐
+│         SISWA                              │
+├──────────────┬───────┬─────────────────────┤
+│ Kolom        │ Tipe  │ Keterangan          │
+├──────────────┼───────┼─────────────────────┤
+│ id (PK)      │ INT   │ -                   │
+│ kelas_id(FK) │ INT   │ Referensi ke KELAS  │
+│ nis (U)      │ STR   │ Nomor induk unik    │
+│ nama_lengkap │ STR   │ -                   │
+│ jenis_kelamin│ ENUM  │ Laki-laki/Perempuan │
+│ tanggal_lahir│ DATE  │ Optional            │
+│ alamat       │ TEXT  │ Optional            │
+│ no_telp      │ STR   │ Optional            │
+│ nama_ortu    │ STR   │ Optional            │
+│ created_at   │ TS    │ -                   │
+│ updated_at   │ TS    │ -                   │
+└──────────────┴───────┴─────────────────────┘
+```
+
+### ABSENSI (Data Kehadiran)
+```
+┌────────────────────────────────────────────┐
+│         ABSENSI                            │
+├──────────────┬───────┬─────────────────────┤
+│ Kolom        │ Tipe  │ Keterangan          │
+├──────────────┼───────┼─────────────────────┤
+│ id (PK)      │ INT   │ -                   │
+│ siswa_id(FK) │ INT   │ Referensi ke SISWA  │
+│ kelas_id(FK) │ INT   │ Referensi ke KELAS  │
+│ tanggal_abs  │ DATE  │ -                   │
+│ status       │ ENUM  │ Hadir/Sakit/Izin/Alpa
+│ keterangan   │ TEXT  │ Optional            │
+│ created_at   │ TS    │ -                   │
+│ updated_at   │ TS    │ -                   │
+└──────────────┴───────┴─────────────────────┘
+Unique: (siswa_id, tanggal_absen)
+```
+
+---
+
+## Cardinalitas & Relasi
+
+```
+USERS → KELAS
+ 1       : N
+(Satu user mengelola banyak kelas)
+
+
+KELAS → SISWA
+  1     :  N
+(Satu kelas memiliki banyak siswa)
+
+
+SISWA → ABSENSI
+  1    :   N
+(Satu siswa memiliki banyak record absensi)
+
+
+KELAS → ABSENSI
+  1    :   N
+(Satu kelas memiliki banyak record absensi)
+```
+
+---
+
+## Business Rules
+
+### 1. Cascade Delete
+```
+✓ Kelas dihapus → Semua Siswa di kelas terhapus
+                → Semua Absensi siswa terhapus
+
+✓ Siswa dihapus → Semua Absensi siswa terhapus
+```
+
+### 2. Unique Constraints
+```
+✓ Users.email    → Setiap user punya email unik
+✓ Kelas.nama_kelas → Setiap kelas punya nama unik
+✓ Siswa.nis      → Setiap siswa punya NIS unik
+✓ (Siswa.id, Absensi.tanggal_absen) → Tidak boleh duplikasi absensi dalam 1 hari
+```
+
+### 3. Enum Values
+```
+Users.role:        [admin, guru]
+Siswa.jenis_kelamin: [Laki-laki, Perempuan]
+Absensi.status:    [Hadir, Sakit, Izin, Alpa]
+```
+
+---
+
+## Contoh Operasi
+
+### Scenario 1: Membuat Kelas Baru
+```
+1. Admin login → Users table
+2. Klik "Tambah Kelas"
+3. Input: nama_kelas="X-RPL-1", tingkat="X", jurusan="RPL", kapasitas=30
+4. Tersimpan di Kelas table
+5. Kelas siap menerima siswa
+```
+
+### Scenario 2: Menambah Siswa
+```
+1. Admin login
+2. Pilih Kelas: "X-RPL-1" (Kelas.id = 1)
+3. Input siswa: nis="12345", nama="Andi Wijaya", jenis_kelamin="Laki-laki"
+4. Tersimpan di Siswa table dengan kelas_id=1
+5. Siswa tercatat dalam kelas
+```
+
+### Scenario 3: Mencatat Absensi
+```
+1. Guru login
+2. Pilih Kelas: "X-RPL-1"
+3. Pilih Tanggal: "2024-12-02"
+4. Input status setiap siswa:
+   - Andi Wijaya: Hadir
+   - Budi Santoso: Sakit (keterangan: demam)
+   - Chitra Dewi: Izin (keterangan: ada acara keluarga)
+5. Tersimpan di Absensi table dengan siswa_id, kelas_id, tanggal_absen
+```
+
+### Scenario 4: Hapus Kelas
+```
+1. Admin login
+2. Pilih Kelas: "X-RPL-1" (id=1)
+3. Klik Hapus
+4. Sistem otomatis:
+   - Hapus Kelas dengan id=1
+   - Hapus Siswa dengan kelas_id=1 (semua siswa di kelas)
+   - Hapus Absensi dengan kelas_id=1 (semua absensi di kelas)
+5. Kelas dan semua data terkait terhapus
+```
+
+---
+
+## Summary
+
+| Aspek | Detail |
+|-------|--------|
+| Total Tabel | 4 tabel |
+| Total Kolom | 40+ kolom |
+| Relasi | 4 relasi utama |
+| Cardinalitas | Semua 1:N (One to Many) |
+| Cascade Delete | ON DELETE CASCADE |
+| Constraints | 3 unique constraints + 1 composite unique |
+| Status Enum | 4 status absensi |
+
