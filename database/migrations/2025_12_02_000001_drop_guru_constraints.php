@@ -49,12 +49,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
-        });
-
-        Schema::table('absensi', function (Blueprint $table) {
-            $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
-        });
+        // No-op: This migration only removes constraints, so reverse is a no-op
+        // The gurus table was already dropped in earlier migrations
     }
 };

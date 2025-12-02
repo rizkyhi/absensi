@@ -28,6 +28,14 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        // Create Guru User
+        $guruUser = User::create([
+            'name' => 'Guru 1',
+            'email' => 'guru1@test.com',
+            'password' => Hash::make('guru123'),
+            'role' => 'guru',
+        ]);
+
         // Create Kelas
         $kelas = [];
         $kelasData = [

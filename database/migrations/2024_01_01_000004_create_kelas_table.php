@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
             $table->string('nama_kelas')->unique();
             $table->string('tingkat'); // X, XI, XII
             $table->string('jurusan')->nullable(); // RPL, TKJ, dll
             $table->integer('kapasitas')->default(30);
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -27,6 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('kelas');
+        Schema::enableForeignKeyConstraints();
     }
 };

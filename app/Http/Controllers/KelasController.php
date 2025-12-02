@@ -55,17 +55,17 @@ class KelasController extends Controller
     public function destroy(Kelas $kelas)
     {
         try {
-            // Delete related absensi records first (cascade delete tidak otomatis karena FK dihapus)
-            $kelas->absensi()->delete();
+            $kelasName = $kelas->nama_kelas;
+            \Log::info("Deleting kelas: $kelasName (ID: {$kelas->id})");
             
-            // Delete related siswa records (siswas memiliki FK cascade ke kelas)
-            $kelas->siswas()->delete();
-            
-            // Delete the kelas itself
+            // Delete will cascade to siswas and absensi automatically
             $kelas->delete();
             
-            return redirect()->route('kelas.index')->with('success', 'Kelas berhasil dihapus');
+            \Log::info("Successfully deleted kelas: $kelasName");
+            return redirect()->route('kelas.index')->with('success', "Kelas '$kelasName' dan semua data terkaitnya berhasil dihapus");
+            
         } catch (\Exception $e) {
+            \Log::error("Error deleting kelas: " . $e->getMessage());
             return redirect()->route('kelas.index')->with('error', 'Gagal menghapus kelas: ' . $e->getMessage());
         }
     }

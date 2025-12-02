@@ -65,7 +65,6 @@ class AbsensiController extends Controller
         ]);
 
         $user = Auth::user();
-        $guru = $user->role === 'guru' ? $user->guru : null;
 
         foreach ($validated['absensi'] as $item) {
             // Cek apakah sudah ada absensi untuk siswa ini di tanggal yang sama
@@ -77,7 +76,6 @@ class AbsensiController extends Controller
                 Absensi::create([
                     'siswa_id' => $item['siswa_id'],
                     'kelas_id' => $validated['kelas_id'],
-                    'guru_id' => $guru ? $guru->id : null,
                     'tanggal_absen' => $validated['tanggal_absen'],
                     'status' => $item['status'],
                     'keterangan' => $item['keterangan'] ?? null,

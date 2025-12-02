@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('absensi', function (Blueprint $table) {
-            $table->dropForeign(['guru_id']);
-            $table->dropColumn('guru_id');
-        });
+        // This migration is no longer needed since guru_id was removed from create_absensi_table
+        // But keeping it for migration history consistency
     }
 
     /**
@@ -22,8 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('absensi', function (Blueprint $table) {
-            $table->foreignId('guru_id')->constrained()->onDelete('cascade');
-        });
+        // No-op: The gurus table was dropped, so we cannot restore this constraint
     }
 };

@@ -14,15 +14,16 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
+        // Total Statistics
         $totalSiswa = Siswa::count();
         $totalKelas = Kelas::count();
         $totalAbsensi = Absensi::count();
 
-        // Statistik absensi hari ini
+        // Absensi hari ini
         $hariIni = Carbon::today();
         $absensiHariIni = Absensi::whereDate('tanggal_absen', $hariIni)->count();
 
-        // Statistik status absensi bulan ini
+        // Status absensi bulan ini
         $bulanIni = Carbon::now()->month;
         $tahunIni = Carbon::now()->year;
 
@@ -30,15 +31,24 @@ class DashboardController extends Controller
             ->whereYear('tanggal_absen', $tahunIni)
             ->selectRaw('status, COUNT(*) as count')
             ->groupBy('status')
-            ->pluck('count', 'status');
+            ->pluck('count', 'status')
+            ->toArray();
 
-        // Data untuk grafik
+        // Data grafik per hari
         $perHari = Absensi::selectRaw('DATE(tanggal_absen) as tanggal, COUNT(*) as total')
             ->whereMonth('tanggal_absen', $bulanIni)
             ->whereYear('tanggal_absen', $tahunIni)
             ->groupBy('tanggal')
             ->orderBy('tanggal', 'asc')
             ->get();
+
+        // Persentase kehadiran
+        $totalAbsensiHariBulanIni = Absensi::whereMonth('tanggal_absen', $bulanIni)
+            ->whereYear('tanggal_absen', $tahunIni)
+            ->count();
+
+        $hadir = $statusAbsensi['Hadir'] ?? 0;
+        $presentasiKehadiran = $totalAbsensiHariBulanIni > 0 ? round(($hadir / $totalAbsensiHariBulanIni) * 100, 1) : 0;
 
         return view('dashboard.admin', [
             'totalSiswa' => $totalSiswa,
@@ -47,6 +57,8 @@ class DashboardController extends Controller
             'absensiHariIni' => $absensiHariIni,
             'statusAbsensi' => $statusAbsensi,
             'perHari' => $perHari,
+            'presentasiKehadiran' => $presentasiKehadiran,
+            'user' => $user,
         ]);
     }
 }

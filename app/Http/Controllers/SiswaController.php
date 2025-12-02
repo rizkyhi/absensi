@@ -16,9 +16,8 @@ class SiswaController extends Controller
         if ($user->role === 'admin') {
             $siswas = Siswa::with('kelas')->paginate(15);
         } else {
-            $guru = $user->guru;
-            $kelasIds = $guru->kelas()->pluck('id');
-            $siswas = Siswa::whereIn('kelas_id', $kelasIds)->with('kelas')->paginate(15);
+            // Guru can see all siswas (no filtering by guru)
+            $siswas = Siswa::with('kelas')->paginate(15);
         }
 
         return view('siswa.index', compact('siswas'));

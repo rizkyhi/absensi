@@ -11,16 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            try {
-                $table->dropForeignKey('kelas_guru_id_foreign');
-            } catch (\Exception $e) {
-                // Foreign key might not exist
-            }
-            if (Schema::hasColumn('kelas', 'guru_id')) {
-                $table->dropColumn('guru_id');
-            }
-        });
+        // This migration is no longer needed since guru_id was removed from create_kelas_table
+        // But keeping it for migration history consistency
     }
 
     /**
@@ -28,8 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kelas', function (Blueprint $table) {
-            $table->foreignId('guru_id')->nullable()->constrained('gurus')->onDelete('cascade');
-        });
+        // No-op: The gurus table was dropped, so we cannot restore this constraint
     }
 };
